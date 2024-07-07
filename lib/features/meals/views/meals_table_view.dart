@@ -12,18 +12,40 @@ class MealsTableView extends StatefulWidget {
 
 class _MealsTableViewState extends State<MealsTableView> {
   late Future<List<Meal>> _meals;
+  final MealService mealService =
+      MealService(); // Store the service instance in memory
+  int mealCount = 0;
 
   @override
   void initState() {
     super.initState();
-    _meals = MealService().fetchMeals();
+    _fetchMeals();
+  }
+
+  Future<void> _fetchMeals() async {
+    _meals = mealService.fetchMeals();
+    _meals.then((meals) {
+      setState(() {
+        mealCount = meals.length;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Meals Table View'),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70.0),
+        child: AppBar(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Meals Table View'),
+              Text('Ordered Meals: $mealCount',
+                  style: const TextStyle(fontSize: 16)),
+            ],
+          ),
+        ),
       ),
       body: FutureBuilder<List<Meal>>(
         future: _meals,
