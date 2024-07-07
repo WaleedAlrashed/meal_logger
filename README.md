@@ -1,16 +1,34 @@
-# meal_logger
+# Meal Logger
 
-A new Flutter project.
+![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=white)
+![Dart](https://img.shields.io/badge/Dart-0175C2?logo=dart&logoColor=white)
+![Google Sheets](https://img.shields.io/badge/Google%20Sheets-0F9D58?logo=googlesheets&logoColor=white)
+![VS Code](https://img.shields.io/badge/VS%20Code-007ACC?logo=visualstudiocode&logoColor=white)
+![Android Studio](https://img.shields.io/badge/Android%20Studio-3DDC84?logo=androidstudio&logoColor=white)
+
+A Flutter application for logging meals with information such as meal name, date, time, location, and notes. Data is stored in a Google Sheets backend.
+
+## Features
+
+- Log meal information with a form
+- View logged meals
+- Pull-to-refresh functionality to reload meal data
+- Submit data to Google Sheets
+- Fetch data from Google Sheets
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Prerequisites
 
-A few resources to get you started if this is your first Flutter project:
+- Flutter SDK: [Install Flutter](https://flutter.dev/docs/get-started/install)
+- Dart SDK: [Install Dart](https://dart.dev/get-dart)
+- Google Sheets API setup: [Google Sheets API](https://developers.google.com/sheets/api/quickstart/js)
+- IDE: [VS Code](https://code.visualstudio.com/) or [Android Studio](https://developer.android.com/studio)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Installation
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone the repository
+
+   ```bash
+   git clone https://github.com/yourusername/meal_logger.git
+   cd meal_logger
