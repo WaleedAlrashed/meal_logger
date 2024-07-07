@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:meal_logger/features/meals/views/meals_table_view.dart';
 import 'dart:convert';
 
 void main() {
@@ -51,7 +52,7 @@ class _MealLoggerState extends State<MealLogger> {
     final String time = "${_time.hour}:${_time.minute}";
 
     const url =
-        'https://script.google.com/macros/s/AKfycbzIDXmc2Q-Fb93MvtJbFOqZEKmJqsiaCy5SQW-dHVtNyRwBHSTbeap7s5Pp5W1zVzVk/exec';
+        'https://script.google.com/macros/s/AKfycbxSFVWmkSZGT-00fiM53vqUlHZRbrwmu30EVlzvQU8wgxh1GZj_it1yYnX4APrkBtdx/exec';
     final response = await http.post(
       Uri.parse(url),
       headers: <String, String>{
@@ -98,6 +99,17 @@ class _MealLoggerState extends State<MealLogger> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Meal Logger'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.list),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MealsTableView()),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
