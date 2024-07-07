@@ -22,4 +22,14 @@ class Meal {
       notes: json['notes'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'mealName': mealName,
+      'date': date,
+      'time': time,
+      'location': location,
+      'notes': notes,
+    };
+  }
 }

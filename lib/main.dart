@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:meal_logger/features/meals/models/meal.dart';
+import 'package:meal_logger/features/meals/services/meal_service.dart';
 import 'package:meal_logger/features/meals/views/meals_table_view.dart';
-import 'dart:convert';
 
 void main() {
   runApp(const MyApp());
@@ -51,27 +51,21 @@ class _MealLoggerState extends State<MealLogger> {
     final String date = "${_date.year}-${_date.month}-${_date.day}";
     final String time = "${_time.hour}:${_time.minute}";
 
-    const url =
-        'https://script.google.com/macros/s/AKfycbxSFVWmkSZGT-00fiM53vqUlHZRbrwmu30EVlzvQU8wgxh1GZj_it1yYnX4APrkBtdx/exec';
-    final response = await http.post(
-      Uri.parse(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'mealName': _mealName,
-        'date': date,
-        'time': time,
-        'location': _location,
-        'notes': _notesController.text,
-      }),
+    Meal meal = Meal(
+      mealName: _mealName,
+      date: date,
+      time: time,
+      location: _location,
+      notes: _notesController.text,
     );
+
+    bool success = await MealService().submitMeal(meal);
 
     setState(() {
       _isLoading = false;
     });
 
-    if (response.statusCode == 200 || response.statusCode == 302) {
+    if (success) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Data submitted successfully!')),

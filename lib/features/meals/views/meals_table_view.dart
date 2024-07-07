@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:intl/intl.dart';
-import 'package:meal_logger/features/meals/models/meal.dart'; // Import intl package
+import 'package:meal_logger/features/meals/models/meal.dart';
+import 'package:meal_logger/features/meals/services/meal_service.dart';
 
 class MealsTableView extends StatefulWidget {
   const MealsTableView({super.key});
@@ -17,20 +16,7 @@ class _MealsTableViewState extends State<MealsTableView> {
   @override
   void initState() {
     super.initState();
-    _meals = fetchMeals();
-  }
-
-  Future<List<Meal>> fetchMeals() async {
-    const url =
-        'https://script.google.com/macros/s/AKfycbxSFVWmkSZGT-00fiM53vqUlHZRbrwmu30EVlzvQU8wgxh1GZj_it1yYnX4APrkBtdx/exec?action=getMeals';
-    final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body);
-      return jsonResponse.map((meal) => Meal.fromJson(meal)).toList();
-    } else {
-      throw Exception('Failed to load meals');
-    }
+    _meals = MealService().fetchMeals();
   }
 
   @override
