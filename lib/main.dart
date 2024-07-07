@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:meal_logger/features/meals/models/meal.dart';
 import 'package:meal_logger/features/meals/services/meal_service.dart';
 import 'package:meal_logger/features/meals/views/meals_table_view.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   runApp(const MyApp());
 }
 

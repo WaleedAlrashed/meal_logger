@@ -1,11 +1,11 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:meal_logger/features/meals/models/meal.dart';
 
 class MealService {
-  static const String baseUrl =
-      'https://script.google.com/macros/s/AKfycbxSFVWmkSZGT-00fiM53vqUlHZRbrwmu30EVlzvQU8wgxh1GZj_it1yYnX4APrkBtdx/exec';
+  final String baseUrl = dotenv.env['GOOGLE_APP_SCRIPT_URL'] ?? '';
 
   Future<List<Meal>> fetchMeals() async {
     final response = await http.get(Uri.parse('$baseUrl?action=getMeals'));
