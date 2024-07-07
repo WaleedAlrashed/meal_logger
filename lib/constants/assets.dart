@@ -1,3 +1,3 @@
 class Assets {
-  static const meal = "assets\\images\\icons\\meal.png";
+  static const meal = "assets/images/icons/meal.png";
 }

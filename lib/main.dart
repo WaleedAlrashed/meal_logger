@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:meal_logger/constants/assets.dart';
 import 'package:meal_logger/features/meals/models/meal.dart';
 import 'package:meal_logger/features/meals/services/meal_service.dart';
 import 'package:meal_logger/features/meals/views/meals_table_view.dart';
@@ -162,6 +163,10 @@ class _MealLoggerState extends State<MealLogger> {
                       onPressed: _submitData,
                       child: const Text('Submit'),
                     ),
+              Image.asset(
+                Assets.meal,
+                scale: 2.0,
+              ),
             ],
           ),
         ),

@@ -30,6 +30,11 @@ class _MealsTableViewState extends State<MealsTableView> {
       setState(() {
         mealCount = meals.length;
       });
+    }).catchError((error) {
+      setState(() {
+        mealCount = 0;
+      });
+      print('Failed to load meals: $error');
     });
   }
 
