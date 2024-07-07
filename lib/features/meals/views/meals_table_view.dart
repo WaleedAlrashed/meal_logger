@@ -23,7 +23,9 @@ class _MealsTableViewState extends State<MealsTableView> {
   }
 
   Future<void> _fetchMeals() async {
-    _meals = mealService.fetchMeals();
+    setState(() {
+      _meals = mealService.fetchMeals();
+    });
     _meals.then((meals) {
       setState(() {
         mealCount = meals.length;
@@ -47,39 +49,42 @@ class _MealsTableViewState extends State<MealsTableView> {
           ),
         ),
       ),
-      body: FutureBuilder<List<Meal>>(
-        future: _meals,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No meals found.'));
-          } else {
-            return ListView(
-              children: snapshot.data!.map((meal) {
-                DateTime date = DateTime.parse(meal.date);
-                String formattedDate = DateFormat('dd/MM/yyyy').format(date);
+      body: RefreshIndicator(
+        onRefresh: _fetchMeals,
+        child: FutureBuilder<List<Meal>>(
+          future: _meals,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text('No meals found.'));
+            } else {
+              return ListView(
+                children: snapshot.data!.map((meal) {
+                  DateTime date = DateTime.parse(meal.date);
+                  String formattedDate = DateFormat('dd/MM/yyyy').format(date);
 
-                String formattedTime;
-                try {
-                  DateTime time = DateTime.parse(meal.time);
-                  formattedTime = DateFormat('HH:mm').format(time);
-                } catch (e) {
-                  formattedTime = 'Invalid Time';
-                }
+                  String formattedTime;
+                  try {
+                    DateTime time = DateTime.parse(meal.time);
+                    formattedTime = DateFormat('HH:mm').format(time);
+                  } catch (e) {
+                    formattedTime = 'Invalid Time';
+                  }
 
-                return ListTile(
-                  title: Text(meal.mealName),
-                  subtitle: Text(
-                      '$formattedDate - $formattedTime - ${meal.location}'),
-                  trailing: Text(meal.notes),
-                );
-              }).toList(),
-            );
-          }
-        },
+                  return ListTile(
+                    title: Text(meal.mealName),
+                    subtitle: Text(
+                        '$formattedDate - $formattedTime - ${meal.location}'),
+                    trailing: Text(meal.notes),
+                  );
+                }).toList(),
+              );
+            }
+          },
+        ),
       ),
     );
   }
