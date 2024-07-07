@@ -35,12 +35,17 @@ class _MealLoggerState extends State<MealLogger> {
   TimeOfDay _time = TimeOfDay.now();
   String _location = 'Home';
   final _notesController = TextEditingController();
+  bool _isLoading = false;
 
   Future<void> _submitData() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
     _formKey.currentState!.save();
+
+    setState(() {
+      _isLoading = true;
+    });
 
     final String date = "${_date.year}-${_date.month}-${_date.day}";
     final String time = "${_time.hour}:${_time.minute}";
@@ -61,11 +66,23 @@ class _MealLoggerState extends State<MealLogger> {
       }),
     );
 
+    setState(() {
+      _isLoading = false;
+    });
+
     if (response.statusCode == 200 || response.statusCode == 302) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Data submitted successfully!')),
         );
+        _formKey.currentState!.reset();
+        _notesController.clear();
+        setState(() {
+          _mealName = '';
+          _date = DateTime.now();
+          _time = TimeOfDay.now();
+          _location = 'Home';
+        });
       }
     } else {
       if (mounted) {
@@ -130,10 +147,12 @@ class _MealLoggerState extends State<MealLogger> {
                 maxLines: 3,
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submitData,
-                child: const Text('Submit'),
-              ),
+              _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ElevatedButton(
+                      onPressed: _submitData,
+                      child: const Text('Submit'),
+                    ),
             ],
           ),
         ),
@@ -145,7 +164,7 @@ class _MealLoggerState extends State<MealLogger> {
     DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _date,
-      firstDate: DateTime(2000),
+      firstDate: DateTime.now(), // Disallow past dates
       lastDate: DateTime(2101),
     );
     if (picked != null && picked != _date) {
@@ -159,10 +178,24 @@ class _MealLoggerState extends State<MealLogger> {
     TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: _time,
+      builder: (BuildContext context, Widget? child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+          child: child!,
+        );
+      },
     );
-    if (picked != null && picked != _time) {
+
+    if (picked != null &&
+        (picked.hour > _time.hour ||
+            (picked.hour == _time.hour && picked.minute >= _time.minute))) {
+      final minutes = picked.minute;
+      final roundedMinutes =
+          (minutes % 30 == 0) ? minutes : (minutes ~/ 30 + 1) * 30 % 60;
+      final roundedPicked =
+          TimeOfDay(hour: picked.hour, minute: roundedMinutes);
       setState(() {
-        _time = picked;
+        _time = roundedPicked;
       });
     }
   }
