@@ -3,6 +3,7 @@ import 'package:meal_logger/constants/assets.dart';
 import 'package:meal_logger/features/meals/models/meal.dart';
 import 'package:meal_logger/features/meals/services/meal_service.dart';
 import 'package:meal_logger/features/meals/views/meals_table_view.dart';
+import 'package:meal_logger/constants/meals_suggestions_list.dart';
 
 class MealLoggerForm extends StatefulWidget {
   const MealLoggerForm({super.key});
@@ -93,16 +94,44 @@ class _MealLoggerFormState extends State<MealLoggerForm> {
           key: _formKey,
           child: ListView(
             children: <Widget>[
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Meal Name'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter the meal name';
+              Autocomplete<String>(
+                optionsBuilder: (TextEditingValue textEditingValue) {
+                  if (textEditingValue.text.isEmpty) {
+                    return const Iterable<String>.empty();
                   }
-                  return null;
+                  return mealsSuggestionsList.where(
+                    (String option) {
+                      return option.toLowerCase().contains(
+                            textEditingValue.text.toLowerCase(),
+                          );
+                    },
+                  );
                 },
-                onSaved: (value) {
-                  _mealName = value!;
+                onSelected: (String selection) {
+                  setState(() {
+                    _mealName = selection;
+                  });
+                },
+                fieldViewBuilder: (
+                  BuildContext context,
+                  TextEditingController textEditingController,
+                  FocusNode focusNode,
+                  VoidCallback onFieldSubmitted,
+                ) {
+                  return TextFormField(
+                    controller: textEditingController,
+                    focusNode: focusNode,
+                    decoration: const InputDecoration(labelText: 'Meal Name'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter the meal name';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _mealName = value!;
+                    },
+                  );
                 },
               ),
               ListTile(
