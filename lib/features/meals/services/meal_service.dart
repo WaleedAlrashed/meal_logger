@@ -28,4 +28,31 @@ class MealService {
 
     return response.statusCode == 200 || response.statusCode == 302;
   }
+
+  Future<List<Map<String, String>>> fetchMealSuggestions() async {
+    final url = '$baseUrl?action=getMenu';
+
+    final response = await http.get(
+      Uri.parse(
+        url,
+      ),
+    );
+    print(response);
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      List<Map<String, String>> mealSuggestions = [];
+      print(data);
+      for (var row in data['values']) {
+        mealSuggestions.add({
+          'name': row[1] ?? '',
+          'image': row.length > 2 && row[2] != null ? row[2] : '',
+          'notes': row.length > 3 ? row[3] : ''
+        });
+      }
+
+      return mealSuggestions;
+    } else {
+      throw Exception('Failed to load meal suggestions');
+    }
+  }
 }
