@@ -9,7 +9,8 @@
 A Flutter application for logging meals with information such as meal name, date, time, location, and notes. Data is stored in a Google Sheets backend.
 
 ## Screenshots
-![meal logger page](./screenshots/meal_logger_form.png)
+<img src="./screenshots/meal_logger_form.png" alt="meal logger page" width="200"/>
+
 
 ## Features
 
