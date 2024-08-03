@@ -135,7 +135,7 @@ class _MealLoggerFormState extends State<MealLoggerForm> {
                 },
               ),
               ListTile(
-                title: Text('Date: ${_date.toLocal()}'.split(' ')[0]),
+                title: Text('Date: ${_date.year}-${_date.month}-${_date.day}'),
                 trailing: const Icon(Icons.keyboard_arrow_down),
                 onTap: _pickDate,
               ),
@@ -207,9 +207,7 @@ class _MealLoggerFormState extends State<MealLoggerForm> {
       },
     );
 
-    if (picked != null &&
-        (picked.hour > _time.hour ||
-            (picked.hour == _time.hour && picked.minute >= _time.minute))) {
+    if (picked != null) {
       final minutes = picked.minute;
       final roundedMinutes =
           (minutes % 30 == 0) ? minutes : (minutes ~/ 30 + 1) * 30 % 60;
